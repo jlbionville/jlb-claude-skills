@@ -2,5 +2,7 @@
   "name": "jlb-python-toolkit",
   "description": "Python pro (Clean Architecture, patterns, argparse JSON), DevOps Python (boto3, CI/CD, monitoring), shell scripting (bash/zsh, sed/awk/grep, Makefile, vim).",
   "version": "1.0.0",
-  "author": "jlbionville"
+  "author": {
+    "name": "jlbionville"
+  }
 }

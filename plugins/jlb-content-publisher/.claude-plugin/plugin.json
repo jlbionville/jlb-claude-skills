@@ -2,5 +2,7 @@
   "name": "jlb-content-publisher",
   "description": "WordPress multi-sites (WP-CLI, API REST, Yoast, Wordfence, WP Rocket, 4 modes éditoriaux), rédaction articles techniques FR (storytelling, personas, SEO).",
   "version": "1.0.0",
-  "author": "jlbionville"
+  "author": {
+    "name": "jlbionville"
+  }
 }

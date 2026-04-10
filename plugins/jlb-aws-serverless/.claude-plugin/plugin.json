@@ -1,0 +1,6 @@
+{
+  "name": "jlb-aws-serverless",
+  "description": "AWS serverless (Lambda, DynamoDB, API Gateway, SQS/SNS, EventBridge, Step Functions, Cognito, observabilité), Terraform IaC (modules, tagging 13 tags, versioning SemVer), Skills Alexa Python.",
+  "version": "1.0.0",
+  "author": "jlbionville"
+}

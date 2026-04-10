@@ -1,0 +1,45 @@
+{
+  "name": "jlb-claude-skills",
+  "owner": {
+    "name": "jlbionville",
+    "email": ""
+  },
+  "metadata": {
+    "description": "Skills modulaires pour Claude Code — Python, AWS serverless, Terraform, WordPress, rédaction technique, investissement boursier.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "jlb-python-toolkit",
+      "source": "./plugins/jlb-python-toolkit",
+      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation).",
+      "version": "1.0.0",
+      "category": "development",
+      "keywords": ["python", "devops", "bash", "shell", "makefile", "clean-architecture", "fastapi", "flask", "boto3", "sed", "awk"]
+    },
+    {
+      "name": "jlb-aws-serverless",
+      "source": "./plugins/jlb-aws-serverless",
+      "description": "Stack serverless AWS complet : Lambda, DynamoDB, API Gateway, SQS, SNS, EventBridge, Step Functions, Cognito, observabilité (CloudWatch, X-Ray, Powertools). Terraform IaC avec modules réutilisables, tagging étendu 13 tags, versioning SemVer. Skills Alexa Python (Custom + Smart Home).",
+      "version": "1.0.0",
+      "category": "cloud",
+      "keywords": ["aws", "lambda", "dynamodb", "terraform", "serverless", "alexa", "api-gateway", "cloudwatch", "x-ray"]
+    },
+    {
+      "name": "jlb-content-publisher",
+      "source": "./plugins/jlb-content-publisher",
+      "description": "Gestion WordPress multi-sites (WP-CLI, API REST, plugins Yoast/Wordfence/WP Rocket, 4 modes éditoriaux) et rédaction d'articles techniques en français (storytelling, personas, SEO, domaines DevOps/AWS/Python/Linux).",
+      "version": "1.0.0",
+      "category": "content",
+      "keywords": ["wordpress", "wp-cli", "articles", "seo", "blog", "french", "technical-writing"]
+    },
+    {
+      "name": "jlb-bourse",
+      "source": "./plugins/jlb-bourse",
+      "description": "Analyse et conseil en investissement boursier : ETF et actions US/EU, enveloppes françaises (PEA, PER, Assurance Vie Linxea, CTO SARL), indicateurs 52W high, sourcing web/social. ⚠️ Conçu pour claude.ai (web_search + artifacts React).",
+      "version": "1.0.0",
+      "category": "finance",
+      "keywords": ["bourse", "investissement", "etf", "actions", "pea", "per", "analyse-financiere"]
+    }
+  ]
+}

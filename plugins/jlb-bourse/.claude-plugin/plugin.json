@@ -1,0 +1,6 @@
+{
+  "name": "jlb-bourse",
+  "description": "Analyse boursière : ETF/actions US+EU, enveloppes FR (PEA, PER, AV Linxea, CTO SARL), 52W high, sourcing web/social. ⚠️ claude.ai uniquement.",
+  "version": "1.0.0",
+  "author": "jlbionville"
+}

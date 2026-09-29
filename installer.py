@@ -54,14 +54,14 @@ DEFAULT_SKILLS_TARGET = CLAUDE_ROOT / "skills"
 DEFAULT_AGENTS_TARGET = CLAUDE_ROOT / "agents"
 
 # Keywords for --report-specifics: detect project-specific references in agents.
+# PRODUCT_VISION.md, REQUIREMENTS.md, USER_STORIES.md are standard agile artifacts
+# and NOT project-specific — they belong to the product-owner agent's generic role.
 PROJECT_SPECIFIC_KEYWORDS = [
     "script4secrets",
+    "test4secrets",
     "Dollar Universe",
     "Automic",
     "ops/file_transfer",
-    "PRODUCT_VISION.md",
-    "REQUIREMENTS.md",
-    "USER_STORIES.md",
 ]
 
 # ── Colors ────────────────────────────────────────────────────────────────────
@@ -320,9 +320,11 @@ def uninstall(skills_target: Path, agents_target: Path, component: str) -> int:
 # ── Reporting ─────────────────────────────────────────────────────────────────
 
 def report_specifics() -> int:
-    """Scan installed agents for project-specific references and list them."""
+    """Scan installed agents for project-specific references and list them.
+    Skips intentional mentions inside "e.g." example lists."""
     plugins = discover_plugins()
     hits: dict[Path, list[str]] = {}
+    intentional = re.compile(r"e\.g\.\s+[^)\n]*")
 
     for meta in plugins.values():
         for agent_path in meta["agents"]:
@@ -330,7 +332,9 @@ def report_specifics() -> int:
                 content = agent_path.read_text(encoding="utf-8")
             except OSError:
                 continue
-            matched = [kw for kw in PROJECT_SPECIFIC_KEYWORDS if kw in content]
+            # Strip "e.g. ..." fragments before scanning to avoid false positives
+            scan_text = intentional.sub("", content)
+            matched = [kw for kw in PROJECT_SPECIFIC_KEYWORDS if kw in scan_text]
             if matched:
                 hits[agent_path] = matched
 

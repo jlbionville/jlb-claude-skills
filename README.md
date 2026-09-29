@@ -64,7 +64,7 @@ et s'appuient sur les skills associées si elles sont installées.
 
 - **Via le plugin** : installés automatiquement, préfixés par le plugin
   (ex. `jlb-python-toolkit:release-manager`, `jlb-atlassian:jira-ticket-writer`).
-- **Via l'installeur local** : `python installer.py --component agents` (voir section legacy plus bas).
+- **Via l'installeur local** : `uv run installer.py --component agents` (voir section legacy plus bas).
 - **Manuellement** : lier le fichier dans `~/.claude/agents/` (ou `.claude/agents/` d'un projet) :
 
 ```bash
@@ -172,16 +172,18 @@ make project P=~/my-repo        # Dans un projet
 
 ### Python (recommandé — supporte skills ET agents)
 
+Python ≥ 3.11 requis. Avec [uv](https://docs.astral.sh/uv/), `uv run installer.py …` choisit automatiquement une version compatible (en-tête PEP 723) ; `make` utilise uv s'il est installé.
+
 ```bash
-python installer.py                                     # Tout (skills + agents), symlink
-python installer.py --component agents                  # Uniquement les agents
-python installer.py --component skills                  # Uniquement les skills
-python installer.py --plugin jlb-workflow-toolkit       # Un plugin spécifique
-python installer.py --project ~/my-repo                 # Dans un projet (.claude/skills/ et .claude/agents/)
-python installer.py --dry-run                           # Aperçu sans écriture
-python installer.py --report-specifics                  # Détecter les refs projet-spécifiques dans les agents
-python installer.py --list                              # Lister plugins, skills, agents
-python installer.py --uninstall                         # Tout supprimer
+uv run installer.py                                     # Tout (skills + agents), symlink
+uv run installer.py --component agents                  # Uniquement les agents
+uv run installer.py --component skills                  # Uniquement les skills
+uv run installer.py --plugin jlb-workflow-toolkit       # Un plugin spécifique
+uv run installer.py --project ~/my-repo                 # Dans un projet (.claude/skills/ et .claude/agents/)
+uv run installer.py --dry-run                           # Aperçu sans écriture
+uv run installer.py --report-specifics                  # Détecter les refs projet-spécifiques dans les agents
+uv run installer.py --list                              # Lister plugins, skills, agents
+uv run installer.py --uninstall                         # Tout supprimer
 ```
 
 Cibles par défaut :

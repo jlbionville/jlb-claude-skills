@@ -27,7 +27,9 @@ SHELL := /bin/bash
 MODE       ?= symlink
 TARGET     ?= $(HOME)/.claude/skills
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-PY         ?= python3
+# Python >= 3.11 requis (StrEnum) : uv choisit la bonne version via l'en-tête
+# PEP 723 d'installer.py ; repli sur python3 si uv est absent.
+PY         ?= $(if $(shell command -v uv 2>/dev/null),uv run --script,python3)
 
 # install.sh handles skills; installer.py handles both (skills + agents).
 SH_INSTALL := bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET)
@@ -95,5 +97,5 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo ""
-	@echo "Variables: MODE=symlink|copy  TARGET=path  P=path  PY=python3"
+	@echo "Variables: MODE=symlink|copy  TARGET=path  P=path  PY="uv run --script"|python3"
 	@echo ""

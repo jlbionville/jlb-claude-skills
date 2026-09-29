@@ -58,13 +58,20 @@ list_plugins() {
     echo -e "\n${BOLD}Available plugins:${NC}\n"
     for plugin_dir in "${PLUGINS_DIR}"/*/; do
         plugin="$(basename "$plugin_dir")"
-        skill_count=$(find "$plugin_dir/skills" -maxdepth 2 -name "SKILL.md" 2>/dev/null | wc -l)
+        skill_count=0
+        if [[ -d "$plugin_dir/skills" ]]; then
+            skill_count=$(find "$plugin_dir/skills" -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
+        fi
         desc=$(python3 -c "import json; print(json.load(open('${plugin_dir}/.claude-plugin/plugin.json'))['description'][:80])" 2>/dev/null || echo "")
         echo -e "  ${CYAN}${plugin}${NC} (${skill_count} skills)"
         [[ -n "$desc" ]] && echo -e "    ${desc}..."
         for skill_dir in "${plugin_dir}"/skills/*/; do
             [[ -f "${skill_dir}/SKILL.md" ]] || continue
             echo "    → $(basename "$skill_dir")"
+        done
+        for agent_file in "${plugin_dir}"/agents/*.md; do
+            [[ -f "$agent_file" ]] || continue
+            echo "    ◆ agent $(basename "$agent_file" .md)"
         done
         echo ""
     done

@@ -12,8 +12,8 @@
     {
       "name": "jlb-python-toolkit",
       "source": "./plugins/jlb-python-toolkit",
-      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation). Agent de revue Python Clean Architecture.",
-      "version": "1.1.0",
+      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation). Agents : revue Python Clean Architecture, gestion de release (SemVer, PR empilées, tags).",
+      "version": "1.2.0",
       "category": "development",
       "keywords": [
         "python",
@@ -28,7 +28,9 @@
         "sed",
         "awk",
         "code-review",
-        "agent"
+        "agent",
+        "release",
+        "semver"
       ]
     },
     {
@@ -65,6 +67,21 @@
         "blog",
         "french",
         "technical-writing"
+      ]
+    },
+    {
+      "name": "jlb-atlassian",
+      "source": "./plugins/jlb-atlassian",
+      "description": "Rédaction de tickets Jira (Epic, Story, Tâche, Sous-tâche) au format du template Markdown Alfaco : user stories, critères d'acceptation, découpage d'epic, liens et pièces jointes, prêts pour alfaco-atlassian ou le plugin Sublime.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "jira",
+        "atlassian",
+        "user-story",
+        "epic",
+        "markdown",
+        "agent"
       ]
     },
     {

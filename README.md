@@ -17,20 +17,24 @@ Puis installer les plugins souhaités :
 /plugin install jlb-aws-serverless@jlb-claude-skills
 /plugin install jlb-content-publisher@jlb-claude-skills
 /plugin install jlb-bourse@jlb-claude-skills
+/plugin install jlb-atlassian@jlb-claude-skills
 ```
 
 ## Plugins
 
 | Plugin | Skills | Agents | Description |
 |--------|--------|--------|-------------|
-| **jlb-python-toolkit** | `python-dev` · `devops-python` · `linux-shell` | `python-clean-architecture-reviewer` | Python pro (Clean Architecture), scripts DevOps, shell/Makefile |
-| **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | `terraform-aws-iac-reviewer` | Stack serverless AWS + Terraform IaC + Skills Alexa |
+| **jlb-python-toolkit** | `python-dev` · `devops-python` · `linux-shell` | `python-clean-architecture-reviewer` · `release-manager` | Python pro (Clean Architecture), scripts DevOps, shell/Makefile |
+| **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | `release-manager` | « prépare la release », « fusionne les PR et crée les tags » | SemVer, mise à jour pyproject/README/CLAUDE.md/CHANGELOG, fusion de PR empilées dans l'ordre (merge commit + retarget), tags annotés, vérification `pip install …@vX.Y.Z`. Demande confirmation avant fusion, tag et push |
+| `jira-ticket-writer` | « rédige une story », « découpe cette epic en tickets » | Écrit des fichiers `.md` au format du template Alfaco (sections, hiérarchie Epic/Story/Tâche/Sous-tâche, Markdown supporté par le convertisseur ADF), plus un `00-plan.md` d'ordre de création. Ne crée pas les tickets dans Jira |
+| `terraform-aws-iac-reviewer` | Stack serverless AWS + Terraform IaC + Skills Alexa |
 | **jlb-content-publisher** | `wordpress-manager` · `technical-article-writer` | — | Gestion WordPress + rédaction articles techniques FR |
 | **jlb-bourse** | `bourse-investor` | — | Analyse boursière ⚠️ *claude.ai uniquement* |
+| **jlb-atlassian** | — | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco |
 
 ### Agents
 
-Sous-agents de **revue en lecture seule** : ils produisent un rapport priorisé
+Les deux agents de **revue** sont en lecture seule : ils produisent un rapport priorisé
 (`fichier:ligne`, scénario, correction minimale) sans modifier le code.
 
 | Agent | Déclenchement | Vérifie |
@@ -41,8 +45,8 @@ Sous-agents de **revue en lecture seule** : ils produisent un rapport priorisé
 Ils respectent les conventions du projet relu (`CLAUDE.md`, `pyproject.toml`) en priorité
 et s'appuient sur les skills associées si elles sont installées.
 
-- **Via le plugin** : installés automatiquement, appelés `jlb-python-toolkit:python-clean-architecture-reviewer`
-  et `jlb-aws-serverless:terraform-aws-iac-reviewer`.
+- **Via le plugin** : installés automatiquement, préfixés par le plugin
+  (ex. `jlb-python-toolkit:release-manager`, `jlb-atlassian:jira-ticket-writer`).
 - **Manuellement** : lier le fichier dans `~/.claude/agents/` (ou `.claude/agents/` d'un projet) :
 
 ```bash
@@ -94,7 +98,8 @@ jlb-claude-skills/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json         ← Manifeste du plugin
 │   │   ├── agents/
-│   │   │   └── python-clean-architecture-reviewer.md
+│   │   │   ├── python-clean-architecture-reviewer.md
+│   │   │   └── release-manager.md
 │   │   └── skills/
 │   │       ├── python-dev/
 │   │       │   ├── SKILL.md
@@ -120,11 +125,16 @@ jlb-claude-skills/
 │   │   └── skills/
 │   │       ├── wordpress-manager/
 │   │       └── technical-article-writer/
-│   └── jlb-bourse/
+│   ├── jlb-bourse/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       └── bourse-investor/
+│   └── jlb-atlassian/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
-│       └── skills/
-│           └── bourse-investor/
+│       └── agents/
+│           └── jira-ticket-writer.md
 ├── install.sh                      ← Legacy: shell installer
 ├── Makefile                        ← Legacy: make installer
 └── installer.py                    ← Legacy: Python installer

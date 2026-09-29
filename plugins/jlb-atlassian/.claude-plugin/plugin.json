@@ -1,0 +1,8 @@
+{
+  "name": "jlb-atlassian",
+  "description": "Rédaction de tickets Jira (Epic, Story, Tâche, Sous-tâche) au format du template Markdown Alfaco, prêts pour alfaco-atlassian ou le plugin Sublime.",
+  "version": "1.0.0",
+  "author": {
+    "name": "jlbionville"
+  }
+}

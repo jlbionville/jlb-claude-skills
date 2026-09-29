@@ -1,6 +1,6 @@
 # jlb-claude-skills
 
-Skills modulaires pour **Claude Code** — développement Python, AWS serverless, rédaction technique, WordPress et investissement boursier.
+Skills et agents modulaires pour **Claude Code** — développement Python, AWS serverless, rédaction technique, WordPress et investissement boursier.
 
 ## Installation rapide (recommandé)
 
@@ -21,12 +21,37 @@ Puis installer les plugins souhaités :
 
 ## Plugins
 
-| Plugin | Skills | Description |
-|--------|--------|-------------|
-| **jlb-python-toolkit** | `python-dev` · `devops-python` · `linux-shell` | Python pro (Clean Architecture), scripts DevOps, shell/Makefile |
-| **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | Stack serverless AWS + Terraform IaC + Skills Alexa |
-| **jlb-content-publisher** | `wordpress-manager` · `technical-article-writer` | Gestion WordPress + rédaction articles techniques FR |
-| **jlb-bourse** | `bourse-investor` | Analyse boursière ⚠️ *claude.ai uniquement* |
+| Plugin | Skills | Agents | Description |
+|--------|--------|--------|-------------|
+| **jlb-python-toolkit** | `python-dev` · `devops-python` · `linux-shell` | `python-clean-architecture-reviewer` | Python pro (Clean Architecture), scripts DevOps, shell/Makefile |
+| **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | `terraform-aws-iac-reviewer` | Stack serverless AWS + Terraform IaC + Skills Alexa |
+| **jlb-content-publisher** | `wordpress-manager` · `technical-article-writer` | — | Gestion WordPress + rédaction articles techniques FR |
+| **jlb-bourse** | `bourse-investor` | — | Analyse boursière ⚠️ *claude.ai uniquement* |
+
+### Agents
+
+Sous-agents de **revue en lecture seule** : ils produisent un rapport priorisé
+(`fichier:ligne`, scénario, correction minimale) sans modifier le code.
+
+| Agent | Déclenchement | Vérifie |
+|-------|---------------|---------|
+| `python-clean-architecture-reviewer` | après écriture de code Python, avant commit/PR, « relis mon code Python » | bugs, règle de dépendance des couches, injection, erreurs codifiées, zéro hardcoding, tests (lance `pytest`/`ruff`/`mypy` si configurés) |
+| `terraform-aws-iac-reviewer` | après modification de `.tf`/`.tfvars`, avant un plan en prod, « revue Terraform » | IAM moindre privilège, chiffrement, state isolé, modules versionnés, 13 tags + validations, SemVer, observabilité. N'exécute jamais `apply`/`destroy`/`state` |
+
+Ils respectent les conventions du projet relu (`CLAUDE.md`, `pyproject.toml`) en priorité
+et s'appuient sur les skills associées si elles sont installées.
+
+- **Via le plugin** : installés automatiquement, appelés `jlb-python-toolkit:python-clean-architecture-reviewer`
+  et `jlb-aws-serverless:terraform-aws-iac-reviewer`.
+- **Manuellement** : lier le fichier dans `~/.claude/agents/` (ou `.claude/agents/` d'un projet) :
+
+```bash
+mkdir -p ~/.claude/agents
+ln -s "$PWD"/plugins/*/agents/*.md ~/.claude/agents/
+```
+
+Invocation explicite : « utilise l'agent python-clean-architecture-reviewer sur le diff »,
+ou `@` puis le nom de l'agent.
 
 ### Dépendances entre skills
 
@@ -68,6 +93,8 @@ jlb-claude-skills/
 │   ├── jlb-python-toolkit/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json         ← Manifeste du plugin
+│   │   ├── agents/
+│   │   │   └── python-clean-architecture-reviewer.md
 │   │   └── skills/
 │   │       ├── python-dev/
 │   │       │   ├── SKILL.md
@@ -81,6 +108,8 @@ jlb-claude-skills/
 │   ├── jlb-aws-serverless/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
+│   │   ├── agents/
+│   │   │   └── terraform-aws-iac-reviewer.md
 │   │   └── skills/
 │   │       ├── aws-serverless/
 │   │       ├── terraform-serverless-aws/
@@ -137,6 +166,7 @@ python installer.py --project ~/my-repo           # Dans un projet
 
 ## Conventions
 
+- Chaque agent : `agents/<nom>.md` avec frontmatter (`name`, `description`, `tools`, `model`) — revue en lecture seule
 - Chaque skill : `SKILL.md` avec frontmatter YAML (`name`, `description`) + `references/` chargés à la demande
 - Chemins relatifs dans les SKILL.md (`references/xxx.md`) → compatibles avec tous les modes d'installation
 - `bourse-investor` dépend de `web_search` et artifacts React → fonctionne uniquement sur claude.ai

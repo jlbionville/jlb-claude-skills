@@ -1,7 +1,7 @@
 {
   "name": "jlb-aws-serverless",
-  "description": "AWS serverless (Lambda, DynamoDB, API Gateway, SQS/SNS, EventBridge, Step Functions, Cognito, observabilité), Terraform IaC (modules, tagging 13 tags, versioning SemVer), Skills Alexa Python.",
-  "version": "1.1.0",
+  "description": "AWS serverless (Lambda, DynamoDB, API Gateway, SQS/SNS, EventBridge, Step Functions, Cognito, observabilité), Terraform IaC (modules, tagging 13 tags, versioning SemVer), Skills Alexa Python. Agents : revue IaC Terraform, DevOps, intégrations (Vault, SFTP), migrations de données, sécurité (IAM, Vault, credentials).",
+  "version": "1.2.0",
   "author": {
     "name": "jlbionville"
   }

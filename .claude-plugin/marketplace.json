@@ -12,8 +12,8 @@
     {
       "name": "jlb-python-toolkit",
       "source": "./plugins/jlb-python-toolkit",
-      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation). Agents : revue Python Clean Architecture, gestion de release (SemVer, PR empilées, tags).",
-      "version": "1.2.0",
+      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation). Agents : revue Python Clean Architecture, gestion de release, SCM (git/PRs), Makefile authoring, scripts Windows (batch/PowerShell), automatisation de tests.",
+      "version": "1.3.0",
       "category": "development",
       "keywords": [
         "python",
@@ -30,14 +30,19 @@
         "code-review",
         "agent",
         "release",
-        "semver"
+        "semver",
+        "scm",
+        "git",
+        "windows",
+        "powershell",
+        "test-automation"
       ]
     },
     {
       "name": "jlb-aws-serverless",
       "source": "./plugins/jlb-aws-serverless",
-      "description": "Stack serverless AWS complet : Lambda, DynamoDB, API Gateway, SQS, SNS, EventBridge, Step Functions, Cognito, observabilité (CloudWatch, X-Ray, Powertools). Terraform IaC avec modules réutilisables, tagging étendu 13 tags, versioning SemVer. Skills Alexa Python (Custom + Smart Home). Agent de revue IaC Terraform AWS.",
-      "version": "1.1.0",
+      "description": "Stack serverless AWS complet : Lambda, DynamoDB, API Gateway, SQS, SNS, EventBridge, Step Functions, Cognito, observabilité (CloudWatch, X-Ray, Powertools). Terraform IaC avec modules réutilisables, tagging étendu 13 tags, versioning SemVer. Skills Alexa Python (Custom + Smart Home). Agents : revue IaC Terraform AWS, ingénierie DevOps, intégrations externes (Vault, SFTP), migrations de données, sécurité (IAM, Vault, credentials).",
+      "version": "1.2.0",
       "category": "cloud",
       "keywords": [
         "aws",
@@ -50,7 +55,14 @@
         "cloudwatch",
         "x-ray",
         "iac-review",
-        "agent"
+        "agent",
+        "devops",
+        "integration",
+        "vault",
+        "sftp",
+        "security",
+        "iam",
+        "data-migration"
       ]
     },
     {
@@ -98,6 +110,22 @@
         "pea",
         "per",
         "analyse-financiere"
+      ]
+    },
+    {
+      "name": "jlb-workflow-toolkit",
+      "source": "./plugins/jlb-workflow-toolkit",
+      "description": "Agents transverses de méthodologie et coordination : product-owner (validation business, user stories, PRODUCT_VISION.md), orchestrator (décomposition multi-agents pour tâches complexes), documentation-writer (documentation projet, guides utilisateur, doc technique).",
+      "version": "1.0.0",
+      "category": "workflow",
+      "keywords": [
+        "product-owner",
+        "orchestrator",
+        "documentation",
+        "workflow",
+        "coordination",
+        "methodology",
+        "agent"
       ]
     }
   ]

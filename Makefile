@@ -4,15 +4,21 @@
 # Preferred: /plugin marketplace add jlbionville/jlb-claude-skills
 #
 # Legacy usage:
-#   make install                 # All plugins, symlink mode
-#   make install MODE=copy       # All plugins, copy mode
+#   make install                 # Skills + agents (all plugins, symlink)
+#   make install MODE=copy       # Copy mode
+#   make install-skills          # Only skills (via install.sh)
+#   make install-agents          # Only agents (via installer.py)
 #   make install-aws             # Only jlb-aws-serverless
 #   make install-python          # Only jlb-python-toolkit
 #   make install-content         # Only jlb-content-publisher
 #   make install-bourse          # Only jlb-bourse
-#   make project P=/path/to/repo # Install into a project's .claude/skills/
-#   make uninstall               # Remove all installed skills
-#   make list                    # Show available plugins and skills
+#   make install-atlassian       # Only jlb-atlassian
+#   make install-workflow        # Only jlb-workflow-toolkit
+#   make project P=/path/to/repo # Install into a project's .claude/
+#   make uninstall               # Remove all installed skills and agents
+#   make list                    # Show plugins/skills/agents
+#   make report-specifics        # Detect project-specific refs in agents
+#   make dry-run                 # Preview install without writing
 # =============================================================================
 
 SHELL := /bin/bash
@@ -21,36 +27,65 @@ SHELL := /bin/bash
 MODE       ?= symlink
 TARGET     ?= $(HOME)/.claude/skills
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+PY         ?= python3
 
-.PHONY: install install-aws install-python install-content install-bourse
-.PHONY: project uninstall list help
+# install.sh handles skills; installer.py handles both (skills + agents).
+SH_INSTALL := bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET)
+PY_INSTALL := $(PY) $(SCRIPT_DIR)/installer.py --mode $(MODE)
 
-install: ## Install all plugins (MODE=symlink|copy)
-	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET)
+.PHONY: install install-skills install-agents
+.PHONY: install-aws install-python install-content install-bourse install-atlassian install-workflow
+.PHONY: project uninstall list report-specifics dry-run help
 
-install-aws: ## Install jlb-aws-serverless only
-	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET) --plugin jlb-aws-serverless
+install: ## Install all (skills + agents, MODE=symlink|copy)
+	@$(SH_INSTALL)
+	@$(PY_INSTALL) --component agents
 
-install-python: ## Install jlb-python-toolkit only
-	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET) --plugin jlb-python-toolkit
+install-skills: ## Install skills only (all plugins)
+	@$(SH_INSTALL)
+
+install-agents: ## Install agents only (all plugins)
+	@$(PY_INSTALL) --component agents
+
+install-aws: ## Install jlb-aws-serverless only (skills + agents)
+	@$(SH_INSTALL) --plugin jlb-aws-serverless
+	@$(PY_INSTALL) --component agents --plugin jlb-aws-serverless
+
+install-python: ## Install jlb-python-toolkit only (skills + agents)
+	@$(SH_INSTALL) --plugin jlb-python-toolkit
+	@$(PY_INSTALL) --component agents --plugin jlb-python-toolkit
 
 install-content: ## Install jlb-content-publisher only
-	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET) --plugin jlb-content-publisher
+	@$(SH_INSTALL) --plugin jlb-content-publisher
 
 install-bourse: ## Install jlb-bourse only
-	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET) --plugin jlb-bourse
+	@$(SH_INSTALL) --plugin jlb-bourse
+
+install-atlassian: ## Install jlb-atlassian (agents only)
+	@$(PY_INSTALL) --component agents --plugin jlb-atlassian
+
+install-workflow: ## Install jlb-workflow-toolkit (agents only)
+	@$(PY_INSTALL) --component agents --plugin jlb-workflow-toolkit
 
 project: ## Install into a project (P=/path/to/repo)
 ifndef P
 	$(error P is required. Usage: make project P=/path/to/my-repo)
 endif
 	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --project $(P)
+	@$(PY_INSTALL) --project $(P) --component agents
 
-uninstall: ## Remove all installed skills
+uninstall: ## Remove all installed skills and agents
 	@bash $(SCRIPT_DIR)/install.sh --uninstall --target $(TARGET)
+	@$(PY_INSTALL) --uninstall --component agents
 
-list: ## List available plugins and skills
-	@bash $(SCRIPT_DIR)/install.sh --list
+list: ## List plugins, skills, and agents
+	@$(PY) $(SCRIPT_DIR)/installer.py --list
+
+report-specifics: ## Detect project-specific references in agents
+	@$(PY) $(SCRIPT_DIR)/installer.py --report-specifics
+
+dry-run: ## Preview install without writing anything
+	@$(PY_INSTALL) --dry-run
 
 help: ## Show this help
 	@echo ""
@@ -58,7 +93,7 @@ help: ## Show this help
 	@echo "Preferred: /plugin marketplace add jlbionville/jlb-claude-skills"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo ""
-	@echo "Variables: MODE=symlink|copy  TARGET=path  P=path"
+	@echo "Variables: MODE=symlink|copy  TARGET=path  P=path  PY=python3"
 	@echo ""

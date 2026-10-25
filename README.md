@@ -29,7 +29,7 @@ Puis installer les plugins souhaités :
 | **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | `terraform-aws-iac-reviewer` · `devops-engineer` · `integration-engineer` · `data-migration-specialist` · `security-expert` | Stack serverless AWS + Terraform IaC + Skills Alexa + DevOps/sécurité/intégrations |
 | **jlb-content-publisher** | `wordpress-manager` · `technical-article-writer` | — | Gestion WordPress + rédaction articles techniques FR |
 | **jlb-bourse** | `bourse-investor` | — | Analyse boursière ⚠️ *claude.ai uniquement* |
-| **jlb-atlassian** | — | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco |
+| **jlb-atlassian** | `session-handoff` | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco + sauvegarde/reprise du contexte Claude dans Confluence |
 | **jlb-workflow-toolkit** | — | `product-owner` · `orchestrator` · `documentation-writer` | Agents transverses : méthodologie, coordination multi-agents, documentation projet |
 
 ### Agents
@@ -87,6 +87,8 @@ aws-serverless ←→ terraform-serverless-aws   "Toujours ensemble"
 alexa-skill-python (Lambda + DynamoDB)
 
 wordpress-manager ←→ technical-article-writer (rédaction → publication)
+
+session-handoff → connecteur Atlassian (Confluence, Jira) + GitHub + Google Drive
 ```
 
 ## Utilisation
@@ -103,6 +105,7 @@ Après installation, les skills se déclenchent **automatiquement** quand Claude
 /wordpress-manager             # WordPress multi-sites
 /technical-article-writer      # Articles techniques FR
 /bourse-investor               # Analyse boursière (claude.ai)
+/session-handoff               # Clôture / reprise du contexte dans Confluence
 ```
 
 ## Structure du repo
@@ -133,7 +136,7 @@ jlb-claude-skills/
 │   │   └── skills/                 (aws-serverless, terraform-serverless-aws, alexa-skill-python)
 │   ├── jlb-content-publisher/      (2 skills)
 │   ├── jlb-bourse/                 (1 skill)
-│   ├── jlb-atlassian/              (1 agent : jira-ticket-writer)
+│   ├── jlb-atlassian/              (1 skill : session-handoff + 1 agent : jira-ticket-writer)
 │   └── jlb-workflow-toolkit/       (3 agents)
 │       ├── .claude-plugin/plugin.json
 │       └── agents/
@@ -197,6 +200,7 @@ Cibles par défaut :
 - Chaque skill : `SKILL.md` avec frontmatter YAML (`name`, `description`) + `references/` chargés à la demande
 - Chemins relatifs dans les SKILL.md (`references/xxx.md`) → compatibles avec tous les modes d'installation
 - `bourse-investor` dépend de `web_search` et artifacts React → fonctionne uniquement sur claude.ai
+- `session-handoff` dépend du connecteur Atlassian (Confluence) ; ses identifiants de pages sont regroupés dans sa section « Paramètres »
 - Certains agents contiennent des références projet-spécifiques (ex. `script4secrets`, `Vault`, `Dollar Universe`) — utilise `python installer.py --report-specifics` pour les lister
 
 ## Licence

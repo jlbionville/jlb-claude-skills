@@ -84,8 +84,8 @@
     {
       "name": "jlb-atlassian",
       "source": "./plugins/jlb-atlassian",
-      "description": "Rédaction de tickets Jira (Epic, Story, Tâche, Sous-tâche) au format du template Markdown Alfaco : user stories, critères d'acceptation, découpage d'epic, liens et pièces jointes, prêts pour alfaco-atlassian ou le plugin Sublime.",
-      "version": "1.0.0",
+      "description": "Rédaction de tickets Jira (Epic, Story, Tâche, Sous-tâche) au format du template Markdown Alfaco : user stories, critères d'acceptation, découpage d'epic, liens et pièces jointes, prêts pour alfaco-atlassian ou le plugin Sublime. Skill session-handoff : sauvegarde et reprise du contexte de travail Claude dans Confluence (état courant + journal hebdomadaire ISO).",
+      "version": "1.1.0",
       "category": "productivity",
       "keywords": [
         "jira",
@@ -93,7 +93,10 @@
         "user-story",
         "epic",
         "markdown",
-        "agent"
+        "agent",
+        "confluence",
+        "session-handoff",
+        "context"
       ]
     },
     {

@@ -21,4 +21,4 @@ défaut (`style`, `complexity`, `perf`, `correctness`, `suspicious`) bloquent la
 Désactiver localement n'est acceptable qu'avec une justification écrite :
 `#[allow(clippy::too_many_arguments)] // signature imposée par le port`.
 
-Source : <https://rust-lang.github.io/rust-clippy/master/index.html> (vérifié le 2026-11-25).
+Source : <https://clippy.rust-lang.org/master/index.html> (vérifié le 2026-11-25).

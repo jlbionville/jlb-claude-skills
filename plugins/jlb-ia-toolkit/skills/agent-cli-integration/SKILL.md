@@ -114,6 +114,6 @@ Pourquoi chaque ligne :
   `--allowedTools`) : <https://code.claude.com/docs/en/cli-reference>
 - Mode non interactif / sortie JSON Claude Code :
   <https://code.claude.com/docs/en/headless>
-- Codex CLI (`codex exec`, `--json`, `--sandbox`) : <https://developers.openai.com/codex/cli>
+- Codex CLI (`codex exec`, `--json`, `--sandbox`) : <https://learn.chatgpt.com/docs/codex/cli> (redirigé depuis developers.openai.com/codex/cli)
 - Formes d'événements : fixtures `claude_stream.jsonl` et `codex_exec.jsonl` du projet
   IA workbench (Claude Code 2.1.329, codex-cli 0.42.0), reproduites dans `references/`.

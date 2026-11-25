@@ -143,6 +143,6 @@ Messages clippy détaillés : `references/clippy-messages.md`.
 - Cargo Book, workspaces et `--locked` :
   <https://doc.rust-lang.org/cargo/reference/workspaces.html>,
   <https://doc.rust-lang.org/cargo/commands/cargo-build.html#manifest-options>
-- Clippy lints : <https://rust-lang.github.io/rust-clippy/master/index.html>
+- Clippy lints : <https://clippy.rust-lang.org/master/index.html>
 - Edition Guide 2024 : <https://doc.rust-lang.org/edition-guide/rust-2024/>
 - `thiserror` : <https://docs.rs/thiserror/latest/thiserror/>

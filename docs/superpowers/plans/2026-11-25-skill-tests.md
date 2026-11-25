@@ -22,3 +22,11 @@ Date : 2026-11-25. Méthode : même question posée à un sous-agent `general-pu
 - **Sans la skill** (46 lignes) : champs justes (`status: incomplete` + `incomplete_details`, bloc `refusal`, `stop_reason`, `created` / `created_at`, `max_input_tokens`) mais assortis de « de mémoire », « pas certain », « à vérifier » (3 réserves) ; paramètres interdits énoncés avec prudence ; pas de type d'outil de recherche daté ni de table HTTP → erreur typée.
 - **Avec la skill** (45 lignes) : zéro réserve, `web_search_20260209`, table 401 / 404 / 429 / 5xx → `ApiAuthentication` / `ApiNotFound` / `ApiRateLimited` / `ApiServer` avec le code API extrait et jamais le corps brut, `budget_tokens` / `tool_choice` / `temperature` listés comme refusés (400), `max_input_tokens` affirmé.
 
+## atlassian-rest-api
+
+- **Sans la skill** (34 lignes) : endpoints et corps déjà justes (`/rest/api/3/issue` avec ADF, `/wiki/api/v2/pages` avec `spaceId` et `storage`, Basic, `/browse/<key>`, `_links.webui`, `errorMessages`) ; rien sur les règles de dégradation (tableaux, titre dans une liste), ni sur ce qu'il ne faut pas afficher d'un corps d'erreur.
+- **Avec la skill** (51 lignes) : dégradation des tableaux en texte, contraintes `listItem` → `paragraph`, champs d'erreur extraits (`errorMessages`, `errors`, `title`) avec la règle « jamais le corps brut » répétée 5 fois, en-tête jamais journalisé, schémas de lien `http` / `https` / `mailto` seulement. La skill apporte les règles de robustesse, pas les endpoints (déjà connus).
+
+## Bilan
+
+Cinq skills, cinq lignes de base neutres (`claude -p`, sonnet, répertoire sans `CLAUDE.md`) : deux lignes de base franchement incomplètes (rust-dev, agent-cli-integration), trois déjà correctes sur le fond mais hésitantes ou génériques (egui-ui-design, llm-provider-apis, atlassian-rest-api). Dans les cinq cas la réponse avec la skill est alignée sur les conventions et sans réserve. URL sources vérifiées le 2026-11-25 (25 URL, 23 directes, 2 redirections reportées).

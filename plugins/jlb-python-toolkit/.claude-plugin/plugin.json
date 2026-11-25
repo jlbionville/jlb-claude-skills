@@ -1,7 +1,7 @@
 {
   "name": "jlb-python-toolkit",
-  "description": "Python pro (Clean Architecture, patterns, argparse JSON), DevOps Python (boto3, CI/CD, monitoring), shell scripting (bash/zsh, sed/awk/grep, Makefile, vim). Agents : revue Clean Architecture, release-manager, SCM (git/PRs), Makefile authoring, scripts Windows, test automation.",
-  "version": "1.3.0",
+  "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring), shell scripting (bash/zsh, sed/awk/grep, Makefile), gabarits Git et release (Conventional Commits, PR, changelog, SemVer). Agents : revue Python Clean Architecture, release-manager agnostique du langage, scm-expert, makefile-expert, windows-scripts-expert, test-automation-engineer.",
+  "version": "1.4.0",
   "author": {
     "name": "jlbionville"
   }

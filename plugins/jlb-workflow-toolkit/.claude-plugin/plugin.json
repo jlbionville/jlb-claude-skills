@@ -1,7 +1,7 @@
 {
   "name": "jlb-workflow-toolkit",
-  "description": "Agents transverses de méthodologie et coordination : product-owner (validation business, user stories), orchestrator (décomposition multi-agents pour tâches complexes), documentation-writer (documentation projet et guides utilisateur).",
-  "version": "1.0.0",
+  "description": "Agents transverses : product-owner (besoin, user stories, critères d'acceptation), orchestrator (découpe et délégation aux agents de la session), documentation-writer (documentation projet dans la langue du CLAUDE.md).",
+  "version": "1.1.0",
   "author": {
     "name": "jlbionville"
   }

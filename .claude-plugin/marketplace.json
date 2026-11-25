@@ -5,15 +5,15 @@
     "email": ""
   },
   "metadata": {
-    "description": "Skills modulaires pour Claude Code — Python, AWS serverless, Terraform, WordPress, rédaction technique, investissement boursier.",
-    "version": "1.0.0"
+    "description": "Skills et agents modulaires pour Claude Code — Python, AWS serverless, Terraform, WordPress, rédaction technique, investissement boursier, Rust / egui, CLI agentiques, API OpenAI, Anthropic et Atlassian.",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "jlb-python-toolkit",
       "source": "./plugins/jlb-python-toolkit",
-      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring, structlog), et shell scripting avancé (bash/zsh, sed/awk/grep, Makefile task runner, vim automation). Agents : revue Python Clean Architecture, gestion de release, SCM (git/PRs), Makefile authoring, scripts Windows (batch/PowerShell), automatisation de tests.",
-      "version": "1.3.0",
+      "description": "Développement Python professionnel (Clean Architecture, design patterns, argparse JSON-driven), scripts DevOps Python (boto3, CI/CD, monitoring), shell scripting (bash/zsh, sed/awk/grep, Makefile), gabarits Git et release (Conventional Commits, PR, changelog, SemVer). Agents : revue Python Clean Architecture, release-manager agnostique du langage, scm-expert, makefile-expert, windows-scripts-expert, test-automation-engineer.",
+      "version": "1.4.0",
       "category": "development",
       "keywords": [
         "python",
@@ -35,14 +35,16 @@
         "git",
         "windows",
         "powershell",
-        "test-automation"
+        "test-automation",
+        "conventional-commits",
+        "changelog"
       ]
     },
     {
       "name": "jlb-aws-serverless",
       "source": "./plugins/jlb-aws-serverless",
-      "description": "Stack serverless AWS complet : Lambda, DynamoDB, API Gateway, SQS, SNS, EventBridge, Step Functions, Cognito, observabilité (CloudWatch, X-Ray, Powertools). Terraform IaC avec modules réutilisables, tagging étendu 13 tags, versioning SemVer. Skills Alexa Python (Custom + Smart Home). Agents : revue IaC Terraform AWS, ingénierie DevOps, intégrations externes (Vault, SFTP), migrations de données, sécurité (IAM, Vault, credentials).",
-      "version": "1.2.0",
+      "description": "Stack serverless AWS complet : Lambda, DynamoDB, API Gateway, SQS, SNS, EventBridge, Step Functions, Cognito, observabilité (CloudWatch, X-Ray, Powertools). Terraform IaC avec modules réutilisables, tagging étendu, versioning SemVer. Skills Alexa Python. Agents génériques : revue IaC Terraform AWS, devops-engineer, integration-engineer (API, SFTP, gestionnaires de secrets), data-migration-specialist, security-expert.",
+      "version": "1.3.0",
       "category": "cloud",
       "keywords": [
         "aws",
@@ -85,7 +87,7 @@
       "name": "jlb-atlassian",
       "source": "./plugins/jlb-atlassian",
       "description": "Rédaction de tickets Jira (Epic, Story, Tâche, Sous-tâche) au format du template Markdown Alfaco : user stories, critères d'acceptation, découpage d'epic, liens et pièces jointes, prêts pour alfaco-atlassian ou le plugin Sublime.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "productivity",
       "keywords": [
         "jira",
@@ -115,8 +117,8 @@
     {
       "name": "jlb-workflow-toolkit",
       "source": "./plugins/jlb-workflow-toolkit",
-      "description": "Agents transverses de méthodologie et coordination : product-owner (validation business, user stories, PRODUCT_VISION.md), orchestrator (décomposition multi-agents pour tâches complexes), documentation-writer (documentation projet, guides utilisateur, doc technique).",
-      "version": "1.0.0",
+      "description": "Agents transverses : product-owner (besoin, user stories, critères d'acceptation), orchestrator (découpe et délégation aux agents de la session), documentation-writer (documentation projet dans la langue du CLAUDE.md).",
+      "version": "1.1.0",
       "category": "workflow",
       "keywords": [
         "product-owner",

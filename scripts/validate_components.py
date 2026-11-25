@@ -192,16 +192,18 @@ class ComponentValidator:
         root: Path,
         max_agent_lines: int = DEFAULT_MAX_AGENT_LINES,
         max_skill_lines: int = DEFAULT_MAX_SKILL_LINES,
+        plugin: Optional[str] = None,
     ) -> None:
         self.root = root
+        self.plugin = plugin or "*"
         self.agent_rule = AgentRule(max_agent_lines)
         self.skill_rule = SkillRule(max_skill_lines)
 
     def agents(self) -> Iterator[Path]:
-        yield from sorted(self.root.glob(f"*/{AGENTS_DIR}/**/*.md"))
+        yield from sorted(self.root.glob(f"{self.plugin}/{AGENTS_DIR}/**/*.md"))
 
     def skills(self) -> Iterator[Path]:
-        yield from sorted(self.root.glob(f"*/{SKILLS_DIR}/*/{SKILL_FILE}"))
+        yield from sorted(self.root.glob(f"{self.plugin}/{SKILLS_DIR}/*/{SKILL_FILE}"))
 
     def run(self) -> list[Issue]:
         issues: list[Issue] = []
@@ -235,6 +237,8 @@ class ValidateComponents:
                             help="Maximum agent body lines (default: %(default)s)")
         parser.add_argument("--max-skill-lines", type=int, default=DEFAULT_MAX_SKILL_LINES,
                             help="Maximum SKILL.md body lines (default: %(default)s)")
+        parser.add_argument("-p", "--plugin", type=str, default=None,
+                            help="Only this plugin directory name (default: all)")
         parser.add_argument("-j", "--json", action="store_true", help="JSON output")
         parser.add_argument("-v", "--verbose", action="store_true", help="Debug logging")
         self.args = parser.parse_args(argv)
@@ -251,7 +255,7 @@ class ValidateComponents:
             logger.error("Root directory not found: %s", self.args.root)
             return ExitCode.GENERAL_ERROR
         validator = ComponentValidator(
-            self.args.root, self.args.max_agent_lines, self.args.max_skill_lines
+            self.args.root, self.args.max_agent_lines, self.args.max_skill_lines, self.args.plugin
         )
         issues = validator.run()
         counted = sum(1 for _ in validator.agents()) + sum(1 for _ in validator.skills())

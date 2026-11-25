@@ -112,3 +112,15 @@ def test_cli_returns_3_on_error_and_0_otherwise(tmp_path: Path) -> None:
     )
     assert bad.returncode == ExitCode.VALIDATION_ERROR
     assert "magenta" in bad.stdout + bad.stderr
+
+
+def test_plugin_filter_limits_the_scan(tmp_path: Path) -> None:
+    write(agent_path(tmp_path), VALID_AGENT.replace("color: blue", "color: magenta"))
+    other = tmp_path / "plugins" / "q" / "agents" / "rust-reviewer.md"
+    write(other, VALID_AGENT)
+    assert problems(tmp_path) != []
+    assert [issue.message for issue in ComponentValidator(tmp_path / "plugins", plugin="q").run()] == []
+    assert any(
+        "magenta" in issue.message
+        for issue in ComponentValidator(tmp_path / "plugins", plugin="p").run()
+    )

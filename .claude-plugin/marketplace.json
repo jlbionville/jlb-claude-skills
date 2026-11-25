@@ -127,6 +127,25 @@
         "methodology",
         "agent"
       ]
+    },
+    {
+      "name": "jlb-ia-toolkit",
+      "source": "./plugins/jlb-ia-toolkit",
+      "description": "Outillage IA : design d'interface egui (Rust), développement Rust en workspace multi-crates, intégration des CLI agentiques Claude Code et Codex, API OpenAI Responses et Anthropic Messages, API REST Jira et Confluence (ADF, storage format). Agents : rust-reviewer (revue Rust en lecture seule), ui-designer (maquettes texte et plan d'interface).",
+      "version": "1.0.0",
+      "category": "development",
+      "keywords": [
+        "rust",
+        "egui",
+        "claude-code",
+        "codex",
+        "openai",
+        "anthropic",
+        "jira",
+        "confluence",
+        "atlassian",
+        "agent"
+      ]
     }
   ]
 }

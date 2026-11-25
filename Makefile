@@ -14,6 +14,7 @@
 #   make install-bourse          # Only jlb-bourse
 #   make install-atlassian       # Only jlb-atlassian
 #   make install-workflow        # Only jlb-workflow-toolkit
+#   make install-ia              # Only jlb-ia-toolkit
 #   make project P=/path/to/repo # Install into a project's .claude/
 #   make uninstall               # Remove all installed skills and agents
 #   make list                    # Show plugins/skills/agents
@@ -34,7 +35,7 @@ SH_INSTALL := bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET)
 PY_INSTALL := $(PY) $(SCRIPT_DIR)/installer.py --mode $(MODE)
 
 .PHONY: install install-skills install-agents
-.PHONY: install-aws install-python install-content install-bourse install-atlassian install-workflow
+.PHONY: install-aws install-python install-content install-bourse install-atlassian install-workflow install-ia
 .PHONY: project uninstall list report-specifics dry-run help
 
 install: ## Install all (skills + agents, MODE=symlink|copy)
@@ -66,6 +67,10 @@ install-atlassian: ## Install jlb-atlassian (agents only)
 
 install-workflow: ## Install jlb-workflow-toolkit (agents only)
 	@$(PY_INSTALL) --component agents --plugin jlb-workflow-toolkit
+
+install-ia: ## Install jlb-ia-toolkit (skills + agents)
+	@$(SH_INSTALL) --plugin jlb-ia-toolkit
+	@$(PY_INSTALL) --component agents --plugin jlb-ia-toolkit
 
 project: ## Install into a project (P=/path/to/repo)
 ifndef P

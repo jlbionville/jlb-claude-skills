@@ -19,6 +19,7 @@ Puis installer les plugins souhaités :
 /plugin install jlb-bourse@jlb-claude-skills
 /plugin install jlb-atlassian@jlb-claude-skills
 /plugin install jlb-workflow-toolkit@jlb-claude-skills
+/plugin install jlb-ia-toolkit@jlb-claude-skills
 ```
 
 ## Plugins
@@ -31,6 +32,7 @@ Puis installer les plugins souhaités :
 | **jlb-bourse** | `bourse-investor` | — | Analyse boursière ⚠️ *claude.ai uniquement* |
 | **jlb-atlassian** | — | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco |
 | **jlb-workflow-toolkit** | — | `product-owner` · `orchestrator` · `documentation-writer` | Agents transverses : méthodologie, coordination multi-agents, documentation projet |
+| **jlb-ia-toolkit** | `rust-dev` · `egui-ui-design` · `agent-cli-integration` · `llm-provider-apis` · `atlassian-rest-api` | `rust-reviewer` · `ui-designer` | Outillage IA : Rust et egui, CLI agentiques Claude Code / Codex, API OpenAI et Anthropic, API REST Jira et Confluence |
 
 ### Agents
 

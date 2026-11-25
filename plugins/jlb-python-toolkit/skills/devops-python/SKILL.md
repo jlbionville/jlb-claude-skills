@@ -1,7 +1,7 @@
 ---
 name: devops-python
 description: >
-  Génère, analyse et améliore des scripts Python DevOps professionnels couvrant AWS/Cloud,
+  À utiliser pour générer, analyser ou améliorer des scripts Python DevOps professionnels couvrant AWS/Cloud,
   CI/CD, automatisation d'infrastructure et monitoring/logging. Utilise cette skill dès que
   l'utilisateur veut écrire un script Python lié à du DevOps, de l'infra, du cloud ou de
   l'automatisation — même s'il ne le formule pas explicitement. Déclencher aussi pour :

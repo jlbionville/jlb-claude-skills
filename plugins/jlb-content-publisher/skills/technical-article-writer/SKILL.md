@@ -1,7 +1,7 @@
 ---
 name: technical-article-writer
 description: >
-  Rédige des articles techniques en français sur des sujets DevOps, AWS, Git, Python, Linux/WSL, IA/ML.
+  À utiliser pour rédiger des articles techniques en français sur des sujets DevOps, AWS, Git, Python, Linux/WSL, IA/ML.
   Utilise cette skill dès que l'utilisateur veut écrire, structurer, rédiger ou améliorer un article,
   un post de blog, un tutoriel ou un guide technique. La skill impose une structure éditoriale cohérente
   avec storytelling, persona fictif, analogies, illustrations (code commenté + image évocatrice),

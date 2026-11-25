@@ -1,7 +1,7 @@
 ---
 name: aws-serverless
 description: >
-  Guide pour concevoir, coder et déployer des apps serverless AWS avec Terraform. Déclencher pour
+  À utiliser quand l'utilisateur conçoit, code ou déploie une application serverless AWS avec Terraform. Déclencher pour
   toute demande impliquant : Lambda, DynamoDB, API Gateway (REST/HTTP), S3, SQS, SNS, EventBridge,
   Step Functions, Cognito, Secrets Manager, SSM. Aussi pour : logs structurés, observabilité,
   X-Ray, CloudWatch, Lambda Powertools, métriques custom, cold start, alertes, dashboard, tagging,

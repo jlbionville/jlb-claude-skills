@@ -1,7 +1,7 @@
 ---
 name: alexa-skill-python
 description: >
-  Guide complet pour développer des Skills Alexa en Python avec l'ASK SDK officiel d'Amazon.
+  À utiliser quand l'utilisateur développe un skill Alexa en Python avec l'ASK SDK officiel d'Amazon (guide complet).
   Utilise ce skill dès que l'utilisateur veut créer, modifier, déboguer ou déployer un skill Alexa
   en Python — qu'il s'agisse d'un Custom Skill (intents/utterances), d'un Smart Home Skill
   (contrôle d'appareils connectés), ou des deux. Déclencher aussi pour : "comment créer un handler

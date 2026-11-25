@@ -1,15 +1,16 @@
 ---
 name: jira-ticket-writer
 description: >
-  Rédacteur de tickets Jira au format du template Markdown Alfaco (sections # Summary,
-  # Type, # Parent, # Links, # Attachments, # Description…), prêts pour
-  alfaco-atlassian (JiraClient.create_issue_from_markdown) ou la commande Sublime
-  « Create Jira from Markdown ». À utiliser quand l'utilisateur veut rédiger, découper ou
-  structurer des tickets Jira : Epic, Story, Tâche, Sous-tâche, user stories, critères
-  d'acceptation, découpage d'une epic en stories. Écrit des fichiers .md ; ne crée PAS
-  les tickets dans Jira sauf demande explicite.
+  À utiliser quand l'utilisateur veut rédiger, découper ou structurer des tickets Jira
+  (Epic, Story, Tâche, Sous-tâche, user stories, critères d'acceptation, découpage d'une
+  epic en stories) au format du template Markdown Alfaco (sections # Summary, # Type,
+  # Parent, # Links, # Attachments, # Description…), prêts pour alfaco-atlassian
+  (JiraClient.create_issue_from_markdown) ou la commande Sublime « Create Jira from
+  Markdown ». Écrit des fichiers .md ; ne crée pas les tickets dans Jira sauf demande
+  explicite.
 tools: Read, Write, Edit, Grep, Glob
 model: sonnet
+color: orange
 ---
 
 Tu rédiges des tickets Jira clairs, découpés et directement exploitables, au format du

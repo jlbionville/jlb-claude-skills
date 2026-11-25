@@ -1,7 +1,7 @@
 ---
 name: python-dev
 description: >
-  Développement Python professionnel : web apps (Flask/FastAPI/Django), APIs REST, scripts CLI,
+  À utiliser pour du développement Python professionnel : web apps (Flask/FastAPI/Django), APIs REST, scripts CLI,
   packages PyPI. Clean architecture (domain/application/infrastructure/interface), design patterns
   (Repository, Factory, DI, Strategy), erreurs codifiées (code+libellé dans constants.py),
   zéro hardcoding (params CLI via argparse piloté par JSON, précédence CLI > fichier > défaut).

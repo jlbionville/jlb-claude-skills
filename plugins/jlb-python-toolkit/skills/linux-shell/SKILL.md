@@ -1,7 +1,7 @@
 ---
 name: linux-shell
 description: >
-  Skill experte pour écrire des scripts shell professionnels (sh/bash/zsh), des pipelines
+  À utiliser pour écrire des scripts shell professionnels (sh/bash/zsh), des pipelines
   de traitement de texte (sed/awk/grep), automatiser vim/vi depuis la ligne de commande,
   et créer des Makefile comme task runner DevOps/Python. Utilise cette skill dès que
   l'utilisateur mentionne : script shell, bash, zsh, sed, awk, grep, vi, vim, Makefile,

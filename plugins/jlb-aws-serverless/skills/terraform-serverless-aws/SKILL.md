@@ -1,7 +1,7 @@
 ---
 name: terraform-serverless-aws
 description: >
-  Guide pour organiser, structurer et standardiser du code Terraform pour des applications
+  À utiliser pour organiser, structurer et standardiser du code Terraform pour des applications
   serverless AWS multi-projets avec modules réutilisables. Utilise cette skill dès que
   l'utilisateur parle de structure Terraform, de modules réutilisables AWS, d'organisation
   de repo infra, de convention de nommage Terraform, de versioning de modules, de tags AWS

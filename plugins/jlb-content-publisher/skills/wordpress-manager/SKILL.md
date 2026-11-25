@@ -1,7 +1,7 @@
 ---
 name: wordpress-manager
 description: >
-  Skill complète pour gérer un ou plusieurs sites WordPress via WP-CLI, l'API REST,
+  À utiliser pour gérer un ou plusieurs sites WordPress via WP-CLI, l'API REST,
   SSH et l'interface admin. Utilise cette skill dès que l'utilisateur mentionne WordPress,
   WP-CLI, un article à rédiger ou publier, des plugins, des thèmes, des utilisateurs,
   la sécurité ou la maintenance d'un site WordPress. Déclencher aussi pour : "rédige

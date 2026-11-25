@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = []
+# ///
 """
 installer.py — Install jlb-claude-skills into Claude Code (legacy method).
 

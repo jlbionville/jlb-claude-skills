@@ -30,7 +30,7 @@ Puis installer les plugins souhaités :
 | **jlb-aws-serverless** | `aws-serverless` · `terraform-serverless-aws` · `alexa-skill-python` | `terraform-aws-iac-reviewer` · `devops-engineer` · `integration-engineer` · `data-migration-specialist` · `security-expert` | Stack serverless AWS + Terraform IaC + Skills Alexa + DevOps/sécurité/intégrations |
 | **jlb-content-publisher** | `wordpress-manager` · `technical-article-writer` | — | Gestion WordPress + rédaction articles techniques FR |
 | **jlb-bourse** | `bourse-investor` | — | Analyse boursière ⚠️ *claude.ai uniquement* |
-| **jlb-atlassian** | — | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco |
+| **jlb-atlassian** | `session-handoff` | `jira-ticket-writer` | Tickets Jira au format du template Markdown Alfaco + sauvegarde/reprise du contexte Claude dans Confluence |
 | **jlb-workflow-toolkit** | — | `product-owner` · `orchestrator` · `documentation-writer` | Agents transverses : méthodologie, coordination multi-agents, documentation projet |
 | **jlb-ia-toolkit** | `rust-dev` · `egui-ui-design` · `agent-cli-integration` · `llm-provider-apis` · `atlassian-rest-api` | `rust-reviewer` · `ui-designer` | Outillage IA : Rust et egui, CLI agentiques Claude Code / Codex, API OpenAI et Anthropic, API REST Jira et Confluence |
 
@@ -70,7 +70,7 @@ tag ou suppression. Les agents de revue ne modifient rien.
 
 - **Via le plugin** : installés automatiquement, préfixés par le plugin
   (ex. `jlb-python-toolkit:release-manager`, `jlb-atlassian:jira-ticket-writer`).
-- **Via l'installeur local** : `python installer.py --component agents` (voir section legacy plus bas).
+- **Via l'installeur local** : `uv run installer.py --component agents` (voir section legacy plus bas).
 - **Manuellement** : lier le fichier dans `~/.claude/agents/` (ou `.claude/agents/` d'un projet) :
 
 ```bash
@@ -93,6 +93,8 @@ aws-serverless ←→ terraform-serverless-aws   "Toujours ensemble"
 alexa-skill-python (Lambda + DynamoDB)
 
 wordpress-manager ←→ technical-article-writer (rédaction → publication)
+
+session-handoff → connecteur Atlassian (Confluence, Jira) + GitHub + Google Drive
 ```
 
 ## Utilisation
@@ -109,6 +111,7 @@ Après installation, les skills se déclenchent **automatiquement** quand Claude
 /wordpress-manager             # WordPress multi-sites
 /technical-article-writer      # Articles techniques FR
 /bourse-investor               # Analyse boursière (claude.ai)
+/session-handoff               # Clôture / reprise du contexte dans Confluence
 ```
 
 ## Structure du repo
@@ -139,7 +142,7 @@ jlb-claude-skills/
 │   │   └── skills/                 (aws-serverless, terraform-serverless-aws, alexa-skill-python)
 │   ├── jlb-content-publisher/      (2 skills)
 │   ├── jlb-bourse/                 (1 skill)
-│   ├── jlb-atlassian/              (1 agent : jira-ticket-writer)
+│   ├── jlb-atlassian/              (1 skill : session-handoff + 1 agent : jira-ticket-writer)
 │   ├── jlb-workflow-toolkit/       (3 agents)
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── agents/
@@ -185,16 +188,18 @@ make project P=~/my-repo        # Dans un projet
 
 ### Python (recommandé — supporte skills ET agents)
 
+Python ≥ 3.11 requis. Avec [uv](https://docs.astral.sh/uv/), `uv run installer.py …` choisit automatiquement une version compatible (en-tête PEP 723) ; `make` utilise uv s'il est installé.
+
 ```bash
-python installer.py                                     # Tout (skills + agents), symlink
-python installer.py --component agents                  # Uniquement les agents
-python installer.py --component skills                  # Uniquement les skills
-python installer.py --plugin jlb-workflow-toolkit       # Un plugin spécifique
-python installer.py --project ~/my-repo                 # Dans un projet (.claude/skills/ et .claude/agents/)
-python installer.py --dry-run                           # Aperçu sans écriture
-python installer.py --report-specifics                  # Détecter les refs projet-spécifiques dans les agents
-python installer.py --list                              # Lister plugins, skills, agents
-python installer.py --uninstall                         # Tout supprimer
+uv run installer.py                                     # Tout (skills + agents), symlink
+uv run installer.py --component agents                  # Uniquement les agents
+uv run installer.py --component skills                  # Uniquement les skills
+uv run installer.py --plugin jlb-workflow-toolkit       # Un plugin spécifique
+uv run installer.py --project ~/my-repo                 # Dans un projet (.claude/skills/ et .claude/agents/)
+uv run installer.py --dry-run                           # Aperçu sans écriture
+uv run installer.py --report-specifics                  # Détecter les refs projet-spécifiques dans les agents
+uv run installer.py --list                              # Lister plugins, skills, agents
+uv run installer.py --uninstall                         # Tout supprimer
 ```
 
 Cibles par défaut :
@@ -210,6 +215,7 @@ Cibles par défaut :
 - Les agents sont génériques : contexte projet lu dans le `CLAUDE.md` du projet courant ; les outils propres à un projet (ex. Vault) n'apparaissent qu'en sous-section conditionnelle. `python installer.py --report-specifics` doit rester vide.
 - Validation : `python3 scripts/validate_components.py` (option `--plugin <nom>`, `--json`) ; tests du validateur : `uv run --group dev python -m pytest`. `claude plugin validate plugins/<nom>` pour le manifeste.
 - `bourse-investor` dépend de `web_search` et artifacts React → fonctionne uniquement sur claude.ai
+- `session-handoff` dépend du connecteur Atlassian (Confluence) ; ses identifiants de pages sont regroupés dans sa section « Paramètres »
 
 ## Licence
 

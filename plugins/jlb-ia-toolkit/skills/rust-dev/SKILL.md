@@ -112,13 +112,13 @@ cargo build --release --locked
 reproductible. Ajouter une dépendance = une exécution sans `--locked`, puis commit du
 lock.
 
-## Pièges fréquents (edition 2024, Rust ≥ 1.88)
+## Pièges fréquents (edition 2024, Rust récent)
 
 | Symptôme | Cause | Remède |
 |---|---|---|
 | `std::env::set_var` est `unsafe` | edition 2024 | injecter un trait `EnvReader` et le simuler dans les tests |
 | `if let … && cond` refusé | `let_chains` est stable en 2024 seulement | vérifier `edition = "2024"` dans le workspace |
-| `manual implementation of is_multiple_of` | clippy récent | `(n).is_multiple_of(3)` au lieu de `n % 3 == 0` |
+| `manual implementation of is_multiple_of` | clippy récent (`is_multiple_of` stable depuis Rust 1.87) | `(n).is_multiple_of(3)` au lieu de `n % 3 == 0` |
 | `method is never used` en `-D warnings` | fonction publique d'un binaire, appelée seulement par les tests | la câbler dans le même commit, ou la retirer |
 | Emprunt refusé dans une fermeture egui | la fermeture capture `&mut state` | calculer les valeurs **avant** la fermeture |
 | `the trait Send is not satisfied` | type non `Send` traversant `thread::spawn` | `Arc<dyn Trait + Send + Sync>` ; pas de `Rc`, pas de `RefCell` |

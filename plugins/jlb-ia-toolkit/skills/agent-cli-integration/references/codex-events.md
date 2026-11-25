@@ -30,4 +30,4 @@ Particularités : `codex exec` refuse de tourner hors d'un dépôt Git sans
 `-C <dir>` fixe le dossier de travail ; `--sandbox danger-full-access` contourne toute
 protection.
 
-Source : <https://learn.chatgpt.com/docs/codex/cli> (redirigé depuis developers.openai.com/codex/cli) (vérifié le 2026-11-25) ; formes constatées sur la version installée.
+Source : formes **constatées** sur codex-cli 0.42.0 (fixtures du projet IA workbench, 2026-11-25) ; la page officielle <https://learn.chatgpt.com/docs/codex/cli> ne les détaille pas à cette date.

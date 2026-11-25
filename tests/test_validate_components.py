@@ -124,3 +124,23 @@ def test_plugin_filter_limits_the_scan(tmp_path: Path) -> None:
         "magenta" in issue.message
         for issue in ComponentValidator(tmp_path / "plugins", plugin="p").run()
     )
+
+
+def test_unknown_plugin_is_an_error(tmp_path: Path) -> None:
+    write(agent_path(tmp_path), VALID_AGENT)
+    script = REPO_ROOT / "scripts" / "validate_components.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--root", str(tmp_path / "plugins"), "--plugin", "nope"],
+        capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == ExitCode.GENERAL_ERROR
+    assert "nope" in result.stdout + result.stderr
+
+
+def test_preloaded_skill_must_exist_in_the_plugins_tree(tmp_path: Path) -> None:
+    agent = VALID_AGENT.replace("color: blue\n", "color: blue\nskills:\n  - rust-dev\n  - missing-skill\n")
+    write(agent_path(tmp_path), agent)
+    write(skill_path(tmp_path), VALID_SKILL)
+    messages = problems(tmp_path)
+    assert any("missing-skill" in m for m in messages)
+    assert not any("rust-dev" in m for m in messages)

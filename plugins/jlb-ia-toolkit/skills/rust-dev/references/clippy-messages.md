@@ -7,7 +7,7 @@ défaut (`style`, `complexity`, `perf`, `correctness`, `suspicious`) bloquent la
 |---|---|---|---|
 | `manual implementation of .is_multiple_of()` | `manual_is_multiple_of` | `a % b == 0` sur des entiers non signés | `a.is_multiple_of(b)` |
 | `this `if` has identical blocks` | `if_same_then_else` | deux branches identiques | fusionner les conditions |
-| `redundant clone` | `redundant_clone` | `.clone()` sur une valeur déplacée juste après | retirer le clone |
+| `redundant clone` | `redundant_clone` (nursery, hors défaut) | `.clone()` sur une valeur déplacée juste après | retirer le clone |
 | `this expression creates a reference which is immediately dereferenced` | `needless_borrow` | `&x` passé à une fonction qui prend `&T` déjà | retirer `&` |
 | `large size difference between variants` | `large_enum_variant` | une variante porte un gros type | `Box<T>` autour de la grosse variante |
 | `method `x` is never used` | `dead_code` (rustc) | fonction publique d'un **binaire** sans appelant hors tests | la câbler, ou `pub(crate)` + usage, ou la supprimer |

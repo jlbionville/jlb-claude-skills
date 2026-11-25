@@ -34,7 +34,7 @@ disent quand.
 |---|---|---|
 | Mode non interactif | `claude -p` | `codex exec` |
 | Sortie JSONL | `--output-format stream-json --verbose` (`--verbose` est requis avec `stream-json` en `-p`) | `--json` |
-| Autorisations | `--permission-mode <acceptEdits\|auto\|bypassPermissions\|manual\|dontAsk\|plan>` ; `--allowedTools "Bash(cargo test)"` (répétable) | `--sandbox <read-only\|workspace-write\|danger-full-access>` |
+| Autorisations | `--permission-mode <default\|acceptEdits\|plan\|auto\|dontAsk\|bypassPermissions>` (`manual` = alias de `default`) ; `--allowedTools "Bash(cargo test)"` (répétable) | `--sandbox <read-only\|workspace-write\|danger-full-access>` |
 | Dossier de travail | `current_dir(dir)` du processus | `-C <dir>` |
 | Hors dépôt Git | — | `--skip-git-repo-check` (sinon refus) |
 | Consigne | **après `--`**, dernier argument | **après `--`**, dernier argument |
@@ -52,6 +52,9 @@ for name in ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"] { command.env_remove(name); 
 
 Pourquoi chaque ligne :
 
+- **Toujours passer le mode d'autorisation** : sans `--permission-mode`, une session `-p`
+  démarre en mode manuel et **refuse** toute demande d'autorisation (l'agent échoue au
+  premier outil non autorisé).
 - **Pas de shell** (`sh -c`) : la consigne vient de l'utilisateur ; passée en argument
   séparé après `--`, elle ne peut pas devenir une option ni une commande.
 - **`stdin` fermé** : l'agent ne peut rien demander au clavier ; une question bloquante
@@ -114,6 +117,11 @@ Pourquoi chaque ligne :
   `--allowedTools`) : <https://code.claude.com/docs/en/cli-reference>
 - Mode non interactif / sortie JSON Claude Code :
   <https://code.claude.com/docs/en/headless>
-- Codex CLI (`codex exec`, `--json`, `--sandbox`) : <https://learn.chatgpt.com/docs/codex/cli> (redirigé depuis developers.openai.com/codex/cli)
-- Formes d'événements : fixtures `claude_stream.jsonl` et `codex_exec.jsonl` du projet
-  IA workbench (Claude Code 2.1.329, codex-cli 0.42.0), reproduites dans `references/`.
+- Codex CLI : page d'entrée <https://learn.chatgpt.com/docs/codex/cli> (redirigée depuis
+  developers.openai.com/codex/cli) ; à la date de vérification elle ne détaille pas
+  `exec --json`, `--sandbox`, `-C` ni `--skip-git-repo-check`. Ces options et les formes
+  d'événements Codex sont **constatées sur codex-cli 0.42.0** (`codex exec --help`, fixtures
+  du projet IA workbench), pas lues sur la page.
+- Formes d'événements Claude Code : constatées sur 2.1.329 et cohérentes avec la page
+  « Run Claude Code programmatically » ; fixtures `claude_stream.jsonl` et
+  `codex_exec.jsonl` reproduites dans `references/`.

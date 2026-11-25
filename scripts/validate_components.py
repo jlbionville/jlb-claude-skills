@@ -100,8 +100,11 @@ class Issue:
 class AgentRule:
     """Rules for `plugins/<plugin>/agents/**/*.md`."""
 
-    def __init__(self, max_lines: int) -> None:
+    def __init__(self, max_lines: int, known_skills: Optional[set[str]] = None) -> None:
         self.max_lines = max_lines
+        # Skills that exist in the plugins tree; a `skills:` entry outside this set
+        # would be skipped silently by Claude Code, so we fail loudly here.
+        self.known_skills = known_skills if known_skills is not None else set()
 
     def check(self, path: Path, component: Frontmatter) -> list[Issue]:
         issues: list[Issue] = []
@@ -120,6 +123,11 @@ class AgentRule:
         model = component.fields.get("model")
         if model and model not in ALLOWED_MODELS and not model.startswith(FULL_MODEL_ID_PREFIX):
             issues.append(Issue(path, f"model '{model}' not in {sorted(ALLOWED_MODELS)}"))
+        for skill in component.fields.get("skills", "").replace(",", " ").split():
+            if skill not in self.known_skills:
+                issues.append(
+                    Issue(path, f"preloaded skill '{skill}' not found under <root>/*/skills/")
+                )
         if component.body_lines > self.max_lines:
             issues.append(
                 Issue(path, f"body has {component.body_lines} lines (max {self.max_lines})")
@@ -196,7 +204,10 @@ class ComponentValidator:
     ) -> None:
         self.root = root
         self.plugin = plugin or "*"
-        self.agent_rule = AgentRule(max_agent_lines)
+        # Skills are resolved across the whole tree: an agent may preload a skill
+        # of another plugin.
+        known_skills = {path.parent.name for path in root.glob(f"*/{SKILLS_DIR}/*/{SKILL_FILE}")}
+        self.agent_rule = AgentRule(max_agent_lines, known_skills)
         self.skill_rule = SkillRule(max_skill_lines)
 
     def agents(self) -> Iterator[Path]:
@@ -253,6 +264,9 @@ class ValidateComponents:
         assert self.args is not None
         if not self.args.root.is_dir():
             logger.error("Root directory not found: %s", self.args.root)
+            return ExitCode.GENERAL_ERROR
+        if self.args.plugin and not (self.args.root / self.args.plugin).is_dir():
+            logger.error("Plugin not found: %s", self.args.root / self.args.plugin)
             return ExitCode.GENERAL_ERROR
         validator = ComponentValidator(
             self.args.root, self.args.max_agent_lines, self.args.max_skill_lines, self.args.plugin

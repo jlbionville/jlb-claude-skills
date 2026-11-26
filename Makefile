@@ -8,6 +8,7 @@
 #   make install MODE=copy       # Copy mode
 #   make install-skills          # Only skills (via install.sh)
 #   make install-agents          # Only agents (via installer.py)
+#   make install-templates       # Only document templates → ~/.claude/templates/
 #   make install-aws             # Only jlb-aws-serverless
 #   make install-python          # Only jlb-python-toolkit
 #   make install-content         # Only jlb-content-publisher
@@ -16,7 +17,7 @@
 #   make install-workflow        # Only jlb-workflow-toolkit
 #   make install-ia              # Only jlb-ia-toolkit
 #   make project P=/path/to/repo # Install into a project's .claude/
-#   make uninstall               # Remove all installed skills and agents
+#   make uninstall               # Remove all installed skills, agents and templates
 #   make list                    # Show plugins/skills/agents
 #   make report-specifics        # Detect project-specific refs in agents
 #   make dry-run                 # Preview install without writing
@@ -36,19 +37,23 @@ PY         ?= $(if $(shell command -v uv 2>/dev/null),uv run --script,python3)
 SH_INSTALL := bash $(SCRIPT_DIR)/install.sh --$(MODE) --target $(TARGET)
 PY_INSTALL := $(PY) $(SCRIPT_DIR)/installer.py --mode $(MODE)
 
-.PHONY: install install-skills install-agents
+.PHONY: install install-skills install-agents install-templates
 .PHONY: install-aws install-python install-content install-bourse install-atlassian install-workflow install-ia
 .PHONY: project uninstall list report-specifics dry-run help
 
-install: ## Install all (skills + agents, MODE=symlink|copy)
+install: ## Install all (skills + agents + templates, MODE=symlink|copy)
 	@$(SH_INSTALL)
 	@$(PY_INSTALL) --component agents
+	@$(PY_INSTALL) --component templates
 
 install-skills: ## Install skills only (all plugins)
 	@$(SH_INSTALL)
 
 install-agents: ## Install agents only (all plugins)
 	@$(PY_INSTALL) --component agents
+
+install-templates: ## Install document templates only (templates/*.md)
+	@$(PY_INSTALL) --component templates
 
 install-aws: ## Install jlb-aws-serverless only (skills + agents)
 	@$(SH_INSTALL) --plugin jlb-aws-serverless
@@ -81,9 +86,10 @@ endif
 	@bash $(SCRIPT_DIR)/install.sh --$(MODE) --project $(P)
 	@$(PY_INSTALL) --project $(P) --component agents
 
-uninstall: ## Remove all installed skills and agents
+uninstall: ## Remove all installed skills, agents and templates
 	@bash $(SCRIPT_DIR)/install.sh --uninstall --target $(TARGET)
 	@$(PY_INSTALL) --uninstall --component agents
+	@$(PY_INSTALL) --uninstall --component templates
 
 list: ## List plugins, skills, and agents
 	@$(PY) $(SCRIPT_DIR)/installer.py --list

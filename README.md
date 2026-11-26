@@ -154,11 +154,13 @@ jlb-claude-skills/
 │       ├── agents/                 (rust-reviewer, ui-designer)
 │       └── skills/                 (rust-dev, egui-ui-design, agent-cli-integration,
 │                                    llm-provider-apis, atlassian-rest-api)
+├── templates/                      ← Gabarits de documents déployés dans ~/.claude/templates/
+│   └── troubleshooting.md          (fiche d'erreur : symptôme, cause, hypothèses et tests, résolution)
 ├── scripts/validate_components.py  ← Validation du frontmatter des agents et skills
-├── tests/                          ← pytest du validateur (uv run --group dev python -m pytest)
+├── tests/                          ← pytest du validateur et de l'installeur (uv run --group dev python -m pytest)
 ├── install.sh                      ← Legacy: shell installer (skills uniquement)
 ├── Makefile                        ← Legacy: make installer
-└── installer.py                    ← Legacy: installeur Python (skills + agents)
+└── installer.py                    ← Legacy: installeur Python (skills + agents + templates)
 ```
 
 ## Installation legacy (alternatives)
@@ -194,6 +196,7 @@ Python ≥ 3.11 requis. Avec [uv](https://docs.astral.sh/uv/), `uv run installer
 uv run installer.py                                     # Tout (skills + agents), symlink
 uv run installer.py --component agents                  # Uniquement les agents
 uv run installer.py --component skills                  # Uniquement les skills
+uv run installer.py --component templates               # Uniquement les gabarits de documents (templates/*.md)
 uv run installer.py --plugin jlb-workflow-toolkit       # Un plugin spécifique
 uv run installer.py --project ~/my-repo                 # Dans un projet (.claude/skills/ et .claude/agents/)
 uv run installer.py --dry-run                           # Aperçu sans écriture
@@ -205,7 +208,8 @@ uv run installer.py --uninstall                         # Tout supprimer
 Cibles par défaut :
 - Skills → `~/.claude/skills/`
 - Agents → `~/.claude/agents/`
-- Avec `--project /path` → `<path>/.claude/skills/` et `<path>/.claude/agents/`
+- Templates → `~/.claude/templates/` (le `CLAUDE.md` global les référence par ce chemin)
+- Avec `--project /path` → `<path>/.claude/skills/`, `<path>/.claude/agents/` et `<path>/.claude/templates/`
 
 ## Conventions
 
@@ -213,6 +217,7 @@ Cibles par défaut :
 - Chaque skill : `SKILL.md` avec frontmatter YAML (`name`, `description` commençant par « Use when » / « À utiliser », déclencheurs FR + EN, < 1 024 caractères) + `references/` chargés à la demande ; corps < 300 lignes visé (500 maximum) ; tout fait d'API cite sa page officielle et une date de vérification.
 - Chemins relatifs dans les SKILL.md (`references/xxx.md`) → compatibles avec tous les modes d'installation
 - Les agents sont génériques : contexte projet lu dans le `CLAUDE.md` du projet courant ; les outils propres à un projet (ex. Vault) n'apparaissent qu'en sous-section conditionnelle. `python installer.py --report-specifics` doit rester vide.
+- Chaque gabarit : `templates/<nom>.md`, un document type complet avec ses sections fixes et un commentaire HTML d'usage en tête ; la règle qui impose son emploi vit dans le `CLAUDE.md` global de l'utilisateur, pas dans le dépôt. `troubleshooting.md` : fiche d'erreur, un fichier par erreur dans `docs/troubleshooting/YYYY-MM-DD-<slug>.md` du projet concerné.
 - Validation : `python3 scripts/validate_components.py` (option `--plugin <nom>`, `--json`) ; tests du validateur : `uv run --group dev python -m pytest`. `claude plugin validate plugins/<nom>` pour le manifeste.
 - `bourse-investor` dépend de `web_search` et artifacts React → fonctionne uniquement sur claude.ai
 - `session-handoff` dépend du connecteur Atlassian (Confluence) ; ses identifiants de pages sont regroupés dans sa section « Paramètres »

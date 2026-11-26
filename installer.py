@@ -12,7 +12,8 @@ Usage:
     python installer.py                                        # All plugins, all components, symlink
     python installer.py --mode copy                            # Copy mode
     python installer.py --plugin jlb-python-toolkit            # One plugin only
-    python installer.py --component agents                     # Only agents (skills|agents|all)
+    python installer.py --component agents                     # Only agents (skills|agents|templates|all)
+    python installer.py --component templates                  # Only the document templates (templates/*.md)
     python installer.py --project /path/to/repo                # Into a project's .claude/
     python installer.py --list                                 # Show plugins
     python installer.py --uninstall                            # Remove all
@@ -46,7 +47,7 @@ ERROR_CATALOG = {
     ErrorCode.TARGET_NOT_WRITABLE: "Cannot write to target directory: {path}",
     ErrorCode.SKILL_INVALID: "Skill directory missing SKILL.md: {path}",
     ErrorCode.AGENT_INVALID: "Agent missing required frontmatter (name, description): {path}",
-    ErrorCode.COMPONENT_UNKNOWN: "Unknown component: {name}. Expected: skills, agents, all.",
+    ErrorCode.COMPONENT_UNKNOWN: "Unknown component: {name}. Expected: skills, agents, templates, all.",
 }
 
 # ── Constants ─────────────────────────────────────────────────────────────────
@@ -56,6 +57,11 @@ PLUGINS_DIR = SCRIPT_DIR / "plugins"
 CLAUDE_ROOT = Path.home() / ".claude"
 DEFAULT_SKILLS_TARGET = CLAUDE_ROOT / "skills"
 DEFAULT_AGENTS_TARGET = CLAUDE_ROOT / "agents"
+# Document templates (troubleshooting record, …) live at the repo root: they are
+# cross-plugin and referenced by path from CLAUDE.md (~/.claude/templates/<name>.md).
+TEMPLATES_DIR = SCRIPT_DIR / "templates"
+DEFAULT_TEMPLATES_TARGET = CLAUDE_ROOT / "templates"
+TEMPLATE_SUFFIX = ".md"
 
 # Keywords for --report-specifics: detect project-specific references in agents.
 # PRODUCT_VISION.md, REQUIREMENTS.md, USER_STORIES.md are standard agile artifacts
@@ -169,6 +175,12 @@ def list_plugins() -> int:
             rel = agent.relative_to(meta["path"] / "agents")
             print(f"    {C.OK} agent:  {rel}")
         print()
+    templates = list_template_files(TEMPLATES_DIR)
+    if templates:
+        print(f"  {C.BOLD}Templates{C.NC} (→ {DEFAULT_TEMPLATES_TARGET}):")
+        for template in templates:
+            print(f"    {C.OK} template: {template.name}")
+        print()
     print(f"  {C.BOLD}Plugin marketplace (preferred):{C.NC}")
     print("    /plugin marketplace add jlbionville/jlb-claude-skills")
     print("    /plugin install <name>@jlb-claude-skills\n")
@@ -236,10 +248,43 @@ def install_agent(agent_src: Path, plugin_agents_root: Path, target_dir: Path,
     print(f"  {C.OK} agent: {rel}")
     return True
 
+
+def list_template_files(templates_dir: Path) -> list[Path]:
+    """Markdown files of templates_dir, sorted; empty when the directory is absent."""
+    if not templates_dir.is_dir():
+        return []
+    return sorted(p for p in templates_dir.iterdir()
+                  if p.is_file() and p.suffix == TEMPLATE_SUFFIX)
+
+
+def install_templates(templates_dir: Path, target_dir: Path, mode: str, dry_run: bool) -> int:
+    """Place every templates/*.md into target_dir (flat). Returns the count handled."""
+    count = 0
+    for template in list_template_files(templates_dir):
+        if dry_run:
+            print(f"  {C.INFO} [dry-run] would install template: {template.name}")
+        else:
+            _place(template, target_dir / template.name, mode)
+            print(f"  {C.OK} template: {template.name}")
+        count += 1
+    return count
+
+
+def uninstall_templates(templates_dir: Path, target_dir: Path) -> int:
+    """Remove from target_dir only the templates this repo knows. Returns the count removed."""
+    count = 0
+    for template in list_template_files(templates_dir):
+        dest = target_dir / template.name
+        if dest.is_symlink() or dest.exists():
+            dest.unlink()
+            print(f"  {C.OK} Removed template: {template.name}")
+            count += 1
+    return count
+
 # ── Install / uninstall ───────────────────────────────────────────────────────
 
 def install(plugin_names: list[str], skills_target: Path, agents_target: Path,
-            mode: str, component: str, dry_run: bool) -> int:
+            templates_target: Path, mode: str, component: str, dry_run: bool) -> int:
     plugins = discover_plugins()
 
     for name in plugin_names:
@@ -273,16 +318,25 @@ def install(plugin_names: list[str], skills_target: Path, agents_target: Path,
                 if install_agent(agent_path, agents_dir, agents_target, mode, dry_run):
                     n_agents += 1
 
+    n_templates = 0
+    if component in ("templates", "all"):
+        print(f"\n{C.INFO} Installing {C.BOLD}templates{C.NC} "
+              f"(mode={mode}{', dry-run' if dry_run else ''})")
+        n_templates = install_templates(TEMPLATES_DIR, templates_target, mode, dry_run)
+
     verb = "Would install" if dry_run else "Installed"
     print(f"\n{C.OK} {C.BOLD}{verb} {n_skills} skills → {skills_target}{C.NC}")
-    print(f"{C.OK} {C.BOLD}{verb} {n_agents} agents → {agents_target}{C.NC}\n")
+    print(f"{C.OK} {C.BOLD}{verb} {n_agents} agents → {agents_target}{C.NC}")
+    print(f"{C.OK} {C.BOLD}{verb} {n_templates} templates → {templates_target}{C.NC}\n")
     return 0
 
 
-def uninstall(skills_target: Path, agents_target: Path, component: str) -> int:
+def uninstall(skills_target: Path, agents_target: Path, templates_target: Path,
+              component: str) -> int:
     plugins = discover_plugins()
     n_skills = 0
     n_agents = 0
+    n_templates = 0
 
     if component in ("skills", "all"):
         for meta in plugins.values():
@@ -314,11 +368,14 @@ def uninstall(skills_target: Path, agents_target: Path, component: str) -> int:
                     if sub.is_dir() and not any(sub.iterdir()):
                         sub.rmdir()
 
-    total = n_skills + n_agents
+    if component in ("templates", "all"):
+        n_templates = uninstall_templates(TEMPLATES_DIR, templates_target)
+
+    total = n_skills + n_agents + n_templates
     if total == 0:
         print(f"  {C.WARN} Nothing to uninstall.")
     else:
-        print(f"\n{C.OK} Removed {n_skills} skills and {n_agents} agents.")
+        print(f"\n{C.OK} Removed {n_skills} skills, {n_agents} agents and {n_templates} templates.")
     return 0
 
 # ── Reporting ─────────────────────────────────────────────────────────────────
@@ -360,13 +417,14 @@ def report_specifics() -> int:
 def build_parser() -> argparse.ArgumentParser:
     plugins = discover_plugins()
     parser = argparse.ArgumentParser(
-        description="Install jlb-claude-skills into Claude Code (skills + agents).",
+        description="Install jlb-claude-skills into Claude Code (skills + agents + templates).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Preferred: /plugin marketplace add jlbionville/jlb-claude-skills",
     )
     parser.add_argument("--mode", choices=["symlink", "copy"], default="symlink",
                         help="Installation mode (default: %(default)s)")
-    parser.add_argument("--component", choices=["skills", "agents", "all"], default="all",
+    parser.add_argument("--component", choices=["skills", "agents", "templates", "all"],
+                        default="all",
                         help="Which component(s) to install (default: %(default)s)")
     parser.add_argument("--plugin", "-p", action="append", dest="plugins",
                         choices=list(plugins.keys()) or None,
@@ -377,6 +435,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help=f"Custom skills target (default: {DEFAULT_SKILLS_TARGET})")
     parser.add_argument("--agents-target", type=Path, default=None,
                         help=f"Custom agents target (default: {DEFAULT_AGENTS_TARGET})")
+    parser.add_argument("--templates-target", type=Path, default=None,
+                        help=f"Custom templates target (default: {DEFAULT_TEMPLATES_TARGET})")
     parser.add_argument("--list", "-l", action="store_true", help="List plugins")
     parser.add_argument("--uninstall", "-u", action="store_true", help="Remove installed items")
     parser.add_argument("--dry-run", action="store_true",
@@ -398,15 +458,17 @@ def main() -> int:
     if args.project:
         skills_target = args.skills_target or (args.project / ".claude" / "skills")
         agents_target = args.agents_target or (args.project / ".claude" / "agents")
+        templates_target = args.templates_target or (args.project / ".claude" / "templates")
     else:
         skills_target = args.skills_target or DEFAULT_SKILLS_TARGET
         agents_target = args.agents_target or DEFAULT_AGENTS_TARGET
+        templates_target = args.templates_target or DEFAULT_TEMPLATES_TARGET
 
     if args.uninstall:
-        return uninstall(skills_target, agents_target, args.component)
+        return uninstall(skills_target, agents_target, templates_target, args.component)
 
     plugin_names = args.plugins or list(discover_plugins().keys())
-    return install(plugin_names, skills_target, agents_target,
+    return install(plugin_names, skills_target, agents_target, templates_target,
                    args.mode, args.component, args.dry_run)
 
 
